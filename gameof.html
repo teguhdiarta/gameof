@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Game Tebak Angka XOX 🎮</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  text-align: center;
+  padding-top: 60px;
+}
+
+.card {
+  background: rgba(0,0,0,0.35);
+  padding: 25px;
+  border-radius: 18px;
+  width: 340px;
+  margin: auto;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.info {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 15px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 20px auto;
+}
+
+.cell {
+  background: rgba(255,255,255,0.15);
+  height: 80px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  transition: 0.3s;
+}
+
+.cell.filled {
+  background: #22c55e;
+}
+
+.cell.wrong {
+  background: #ef4444;
+}
+
+input, button {
+  padding: 12px;
+  width: 85%;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+button {
+  background: #ffcc00;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.reset {
+  background: #ff6b6b;
+  color: white;
+}
+
+#hasil {
+  margin-top: 12px;
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>🎯 Tebak Angka </h2>
+  <div class="info">Tebak angka 1 – 10</div>
+
+  <div class="grid">
+    <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+    <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+    <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+  </div>
+
+  <input type="number" id="tebakan" placeholder="Masukkan angka">
+  <button onclick="cekTebakan()">Tebak</button>
+  <button class="reset" onclick="resetGame()">Reset 🔄</button>
+
+  <div id="hasil"></div>
+</div>
+
+<script>
+let angkaRahasia = buatAngkaBaru();
+let indexCell = 0;
+const cells = document.querySelectorAll(".cell");
+
+function buatAngkaBaru() {
+  return Math.floor(Math.random() * 10) + 1;
+}
+
+function cekTebakan() {
+  const tebakan = document.getElementById("tebakan").value;
+  const hasil = document.getElementById("hasil");
+
+  if (!tebakan || indexCell >= cells.length) return;
+
+  if (tebakan == angkaRahasia) {
+    cells[indexCell].textContent = "✔";
+    cells[indexCell].classList.add("filled");
+    hasil.textContent = "🎉 Benar! Angka diganti, lanjut 🎯";
+
+    // 🔁 GANTI ANGKA BARU
+    angkaRahasia = buatAngkaBaru();
+  } else {
+    cells[indexCell].textContent = "✖";
+    cells[indexCell].classList.add("wrong");
+    hasil.textContent = tebakan < angkaRahasia ? "⬆ Terlalu kecil Angka" : "⬇ Terlalu besar Angka";
+  }
+
+  indexCell++;
+  document.getElementById("tebakan").value = "";
+
+  if (indexCell === cells.length) {
+    hasil.textContent = "🏁 Game selesai! Reset untuk main lagi.";
+  }
+}
+
+function resetGame() {
+  angkaRahasia = buatAngkaBaru();
+  indexCell = 0;
+  document.getElementById("hasil").textContent = "";
+  document.getElementById("tebakan").value = "";
+
+  cells.forEach(cell => {
+    cell.textContent = "";
+    cell.className = "cell";
+  });
+}
+</script>
+
+</body>
+</html>
